@@ -15,7 +15,7 @@ const authenticationMiddleware = (req, res, next) => {
     req.user = verifyJWT(token);
     next();
   } catch (error) {
-    console.log(error);
+    return res.status(StatusCodes.UNAUTHORIZED).json({ msg: "Expired JWT." });
   }
 };
 

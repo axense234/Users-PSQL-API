@@ -11,6 +11,8 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     errObject.msg = "Email not unique.Please provide a unique email.";
   }
 
+  console.log(err);
+
   return res.status(errObject.code).json({ msg: errObject.msg });
 };
 
