@@ -6,7 +6,18 @@ const HOST =
     ? "postgres://ltzfljbs:oqELznM5WxPWQYGjqRqjXUSCzf-EF0eu@mel.db.elephantsql.com/ltzfljbs"
     : "localhost";
 
-const client = new Client(process.env.PGCSTRING);
+const clientOptions =
+  process.env.NODE_ENV === "production"
+    ? process.env.PGCSTRING
+    : {
+        host: HOST,
+        user: "postgres",
+        port: 5432,
+        password: process.env.PGPASSWORD,
+        database: process.env.PGDATABASE,
+      };
+
+const client = new Client(clientOptions);
 
 const connectDB = async () => {
   await client.connect();
