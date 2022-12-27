@@ -1,15 +1,14 @@
 const { Client } = require("pg");
 require("dotenv").config();
 
-const HOST =
-  process.env.NODE_ENV === "production" ? "users-api-nep-ca" : "localhost";
+const HOST = process.env.NODE_ENV === "production" ? "mel" : "localhost";
 
 const client = new Client({
   host: HOST,
   user: "postgres",
   port: 5432,
-  password: process.env.POSTGRES_USER_PASS,
-  database: "node",
+  password: process.env.PGPASSWORD,
+  database: process.env.PGDATABASE,
 });
 
 const connectDB = async () => {
