@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const HOST =
   process.env.NODE_ENV === "production"
-    ? "mel.db.elephantsql.com"
+    ? "postgres://ltzfljbs:oqELznM5WxPWQYGjqRqjXUSCzf-EF0eu@mel.db.elephantsql.com/ltzfljbs"
     : "localhost";
 
 const client = new Client({
