@@ -1,7 +1,10 @@
 const { Client } = require("pg");
 require("dotenv").config();
 
-const HOST = process.env.NODE_ENV === "production" ? "mel" : "localhost";
+const HOST =
+  process.env.NODE_ENV === "production"
+    ? "mel.db.elephantsql.com"
+    : "localhost";
 
 const client = new Client({
   host: HOST,
