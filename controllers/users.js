@@ -1,5 +1,5 @@
-const { client } = require("../db/connect");
 const { StatusCodes } = require("http-status-codes");
+const { client } = require("../db/connect");
 
 // GET ALL USERS
 const getAllUsers = async (req, res) => {
@@ -46,6 +46,16 @@ const updateUserByUID = async (req, res) => {
 
   let columnsToUpdateQuery = "";
 
+  const verifyUser = await client.query(
+    `SELECT * FROM users WHERE user_uid = '${userUID}'`
+  );
+
+  if (!verifyUser.rowCount === 0) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      msg: `Could not find any users with the id provided: ${userUID}`,
+    });
+  }
+
   // UPDATE FROM users SET column_name = value,...
   // i want to make it so you can update multiply columns with one request
 
@@ -56,7 +66,7 @@ const updateUserByUID = async (req, res) => {
     const valueToBeAdded = typeof value === "number" ? value : `'${value}'`;
 
     // CHECKING IF IT IS THE LAST ITEM IN THE ARRAY SO WE CAN REMOVE THE ,
-    if (index == updateObject.length - 1) {
+    if (index === updateObject.length - 1) {
       columnsToUpdateQuery = columnsToUpdateQuery.concat(
         `${key} = ${valueToBeAdded}`
       );
@@ -77,9 +87,10 @@ const updateUserByUID = async (req, res) => {
     `SELECT * FROM users WHERE user_uid = '${userUID}'`
   );
 
-  return res
-    .status(StatusCodes.OK)
-    .json({ msg: "idk lol", user: foundUser.rows[0] });
+  return res.status(StatusCodes.OK).json({
+    msg: `Successfully found user: ${foundUser.rows[0].username}`,
+    user: foundUser.rows[0],
+  });
 };
 
 // DELETE USER BY UID

@@ -1,12 +1,15 @@
-const { client } = require("../db/connect");
 const { StatusCodes } = require("http-status-codes");
+const { v4 } = require("uuid");
+const { client } = require("../db/connect");
 const { encryptPassword, comparePasswords } = require("../utils/bcrypt");
 const { createJWT } = require("../utils/jwt");
+require("dotenv").config();
 
 // CREATE USER
 const createUser = async (req, res) => {
   const newUserContent = req.body;
-  let newUserContentQuery = "";
+  const uuidv4 = v4();
+  let newUserContentQuery = `'${uuidv4}', `;
 
   const { email, password } = newUserContent;
 
@@ -28,7 +31,7 @@ const createUser = async (req, res) => {
       valueToBeAdded = value;
     }
 
-    if (index == objectValues.length - 1) {
+    if (index === objectValues.length - 1) {
       newUserContentQuery = newUserContentQuery.concat(valueToBeAdded);
     } else {
       newUserContentQuery = newUserContentQuery.concat(`${valueToBeAdded}, `);
@@ -52,7 +55,11 @@ const createUser = async (req, res) => {
 
   return res
     .status(StatusCodes.OK)
-    .json({ msg: "testing", user: foundUser, jwt: token });
+    .json({
+      msg: `Successfully created user: ${foundUser.username}`,
+      user: foundUser,
+      jwt: token,
+    });
 };
 
 // LOGIN USER BY PASSWORD,EMAIL AND USERNAME
@@ -103,4 +110,33 @@ const loginUser = async (req, res) => {
   });
 };
 
-module.exports = { createUser, loginUser };
+// AUTHORIZE USER(FOR SWAGGER DOCS)
+const authorizeUser = async (req, res) => {
+  const { username, password } = req.body;
+  console.log(req.body);
+  if (!username || !password) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      msg: "Please enter both username and password.",
+    });
+  }
+
+  if (username !== process.env.SWAGGER_USERNAME) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      msg: "Invalid username.",
+    });
+  }
+
+  if (password !== process.env.SWAGGER_PASSWORD) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      msg: "Invalid password.",
+    });
+  }
+
+  const token = createJWT("test123", username);
+  return res.status(StatusCodes.OK).json({
+    msg: "Authorized, here is the token.",
+    token,
+  });
+};
+
+module.exports = { createUser, loginUser, authorizeUser };

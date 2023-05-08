@@ -1,5 +1,8 @@
 const express = require("express");
+const swaggerUI = require("swagger-ui-express");
+const swaggerOptions = require("./utils/swagger");
 const { connectDB } = require("./db/connect");
+const { version } = require("./package.json");
 require("express-async-errors");
 require("dotenv").config();
 
@@ -13,10 +16,14 @@ const authRouter = require("./routers/auth");
 const errorHandlerMiddleware = require("./middleware/errorHandler");
 
 app.use(express.json());
-app.use(express.raw());
 
 app.use("/", [usersRouter, authRouter]);
 app.use(errorHandlerMiddleware);
+app.use(
+  `/api/${version}/docs`,
+  swaggerUI.serve,
+  swaggerUI.setup(swaggerOptions.docs)
+);
 
 app.get("/", (req, res) => {
   return res.status(200).json({ msg: "Hello Node with PostgreSQL." });

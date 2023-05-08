@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 
 const errorHandlerMiddleware = (err, req, res, next) => {
-  let errObject = {
+  const errObject = {
     code: err.code || StatusCodes.INTERNAL_SERVER_ERROR,
     msg: err.message || "Unidentified error.Please try again later.",
   };
