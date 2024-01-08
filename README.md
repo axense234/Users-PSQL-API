@@ -8,14 +8,16 @@ A node, express and postgres project with the goal of practicing my postgresql s
 Used the "pg" package in order to create a postgresql client
 with options that match my local postgresql database.Had a lot of fun with the queries and data manipulation to make things actually work.
 
-Also the documentation for this project was pretty enjoyable to create aswell.
+Also the documentation for this project was pretty enjoyable to create as well.
 
 ## Getting Started
 
 ### Dependencies
 
-- check package.json for details
-- you might also want your own postgresql database
+- Git installed on your machine
+- Docker installed on your machine(optional)
+- A PostgreSQL DB(cloud, local, container)
+- Check package.json for other dependencies
 
 ### Installing
 
@@ -32,20 +34,34 @@ cd Users-PSQL-API
 npm install
 ```
 
-- rename **.env.sample** to **.env** and put your own environment variables respectively:
+- rename **.env.sample** to **.env** and put your own environment variables:
+  - **PGHOST** = the host of your postgres database (default is localhost)
+  - **PGUSER** = the user of your postgres database (default is "postgres")
+  - **PGPORT** = the port of your postgres database (default is 5432)
   - **PGPASSWORD** = the password of your postgres user
-  - **PGDATABASE** = the name of your postgres database
-  - **PORT** = the port you want the api to run on
-  - **JWT_SECRET_KEY** = your jwt secret key for jwt uses
+  - **PGDATABASE** = the name of your postgres table
+  - **PORT** = the port which your server listens on
   - **SWAGGER_USERNAME** = your own swagger username for authorization purposes
   - **SWAGGER_PASSWORD** = your own swagger password for authorization purposes
+  - **JWT_SECRET_KEY** = the jwt secret key used for authorization purposes
+
+### Setup
+
+- You might want to create your own table and insert some default users. In case you are lazy you can just import the **"default_users.sql"** file
 
 ### Executing program
 
-- test the api with nodemon
+- Test using nodemon
 
 ```
 npm test
+```
+
+- Test using docker-compose
+
+```
+docker build -t users-psql-api .
+docker compose up
 ```
 
 ## Authors

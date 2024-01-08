@@ -31,7 +31,9 @@ app.get("/", (req, res) => {
 
 const startServer = async () => {
   try {
-    await connectDB();
+    await connectDB().then(() => {
+      console.log("Connected to PSQL!");
+    });
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`);
     });

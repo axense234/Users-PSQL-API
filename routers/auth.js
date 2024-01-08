@@ -38,6 +38,8 @@ router.post("/auth", authorizeUser);
  * /users:
  *  post:
  *   description: Route for creating a user.
+ *   security:
+ *    - bearerAuth: []
  *   tags:
  *    - POST Routes
  *   requestBody:

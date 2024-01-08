@@ -1,0 +1,43 @@
+version: "3.8"
+services:
+  server:
+    image: users-psql-api:latest
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      - PGHOST=${PGHOST}
+      - PGUSER=${PGUSER}
+      - PGPORT=${PGPORT}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGDATABASE=${PGDATABASE}
+      - PORT=${PORT}
+      - SWAGGER_USERNAME=${SWAGGER_USERNAME}
+      - SWAGGER_PASSWORD=${SWAGGER_PASSWORD}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:${PORT} || exit 1"]
+
+  postgres-db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "${PGPORT}:${PGPORT}"
+    environment:
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=${PGDATABASE}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER}"]
+      interval: 50s
+      retries: 3
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
